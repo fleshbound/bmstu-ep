@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 from email.policy import default
-from tkinter import ttk
+from tkinter import ttk, StringVar
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,11 +13,12 @@ class UI:
     def __init__(self, master):
         self.master = master
         master.title("Лабораторная работа №1. ИУ7-83Б Авдейкина")
-        master.geometry("500x500")  # Фиксированный размер окна
+        master.geometry("500x700")  # Фиксированный размер окна
 
         self.font = ("Courier", 14)  # Определяем шрифт
         self.padding = 5  # Отступ внутри LabelFrame
         self.label_width = 10  # Ширина меток
+        self.experiment_type = tk.StringVar(value="passive")  # Default to passive
 
         self.DESCRIPTION = ("\tПрограмма позволяет выполнить моделирование СМО с абсолютными приоритетами, "
                             "в которой\nсодержатся два генератора, бесконечный буфер и обслуживающий аппарат.\n"
@@ -44,15 +45,17 @@ class UI:
         self.generator1_frame = tk.LabelFrame(self.master, text="Генератор 1", font=self.font, padx=self.padding, pady=self.padding)
         self.generator1_frame.grid(row=0, column=0, padx=10, pady=5, sticky="ew")
 
-        self.lambda1_label = tk.Label(self.generator1_frame, text="lambda1\n(min, max)", font=self.font, width=self.label_width, anchor='w', justify='left')
+        self.lambda1_label_val = StringVar()
+        self.lambda1_label_val.set("lambda1\n(min, max)")
+        self.lambda1_label = tk.Label(self.generator1_frame, textvariable=self.lambda1_label_val, font=self.font, anchor='w', justify='left')
         self.lambda1_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         self.lambda1_spinbox_min_val = tk.DoubleVar()
         self.lambda1_spinbox_min_val.set(1.0)
-        self.lambda1_spinbox_min = tk.Spinbox(self.generator1_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.lambda1_spinbox_min_val)
+        self.lambda1_spinbox_min = tk.Spinbox(self.generator1_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.lambda1_spinbox_min_val)
         self.lambda1_spinbox_min.grid(row=0, column=1, padx=5, pady=5, sticky="e")
         self.lambda1_spinbox_max_val = tk.DoubleVar()
         self.lambda1_spinbox_max_val.set(5.0)
-        self.lambda1_spinbox_max = tk.Spinbox(self.generator1_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.lambda1_spinbox_max_val)
+        self.lambda1_spinbox_max = tk.Spinbox(self.generator1_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.lambda1_spinbox_max_val)
         self.lambda1_spinbox_max.grid(row=0, column=2, padx=5, pady=5, sticky="e")
 
 
@@ -60,15 +63,17 @@ class UI:
         self.generator2_frame = tk.LabelFrame(self.master, text="Генератор 2", font=self.font, padx=self.padding, pady=self.padding)
         self.generator2_frame.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
 
-        self.lambda2_label = tk.Label(self.generator2_frame, text="lambda2\n(min, max)", font=self.font, width=self.label_width, anchor='w', justify='left')
+        self.lambda2_label_val = StringVar()
+        self.lambda2_label_val.set("lambda2\n(min, max)")
+        self.lambda2_label = tk.Label(self.generator2_frame, textvariable=self.lambda2_label_val, font=self.font, anchor='w', justify='left')
         self.lambda2_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         self.lambda2_spinbox_min_val = tk.DoubleVar()
         self.lambda2_spinbox_min_val.set(1.0)
-        self.lambda2_spinbox_min = tk.Spinbox(self.generator2_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.lambda2_spinbox_min_val)
+        self.lambda2_spinbox_min = tk.Spinbox(self.generator2_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.lambda2_spinbox_min_val)
         self.lambda2_spinbox_min.grid(row=0, column=1, padx=5, pady=5, sticky="e")
         self.lambda2_spinbox_max_val = tk.DoubleVar()
         self.lambda2_spinbox_max_val.set(5.0)
-        self.lambda2_spinbox_max = tk.Spinbox(self.generator2_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.lambda2_spinbox_max_val)
+        self.lambda2_spinbox_max = tk.Spinbox(self.generator2_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.lambda2_spinbox_max_val)
         self.lambda2_spinbox_max.grid(row=0, column=2, padx=5, pady=5, sticky="e")
 
         # Группа 3: Обслуживающий аппарат
@@ -76,27 +81,31 @@ class UI:
         self.service_frame.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
 
         # Строка 1: mu1
-        self.mu1_label = tk.Label(self.service_frame, text="mu1\n(min, max)", font=self.font, width=self.label_width, anchor='w', justify='left')
+        self.mu1_label_val = StringVar()
+        self.mu1_label_val.set("mu1\n(min, max)")
+        self.mu1_label = tk.Label(self.service_frame, textvariable=self.mu1_label_val, font=self.font, anchor='w', justify='left')
         self.mu1_label.grid(row=0, column=0, padx=5, pady=2, sticky="w")
         self.mu1_spinbox_min_val = tk.DoubleVar()
         self.mu1_spinbox_min_val.set(1.0)
-        self.mu1_spinbox_min = tk.Spinbox(self.service_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.mu1_spinbox_min_val)
+        self.mu1_spinbox_min = tk.Spinbox(self.service_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.mu1_spinbox_min_val)
         self.mu1_spinbox_min.grid(row=0, column=1, padx=5, pady=2, sticky="e")
         self.mu1_spinbox_max_val = tk.DoubleVar()
         self.mu1_spinbox_max_val.set(5.0)
-        self.mu1_spinbox_max = tk.Spinbox(self.service_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.mu1_spinbox_max_val)
+        self.mu1_spinbox_max = tk.Spinbox(self.service_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.mu1_spinbox_max_val)
         self.mu1_spinbox_max.grid(row=0, column=2, padx=5, pady=2, sticky="e")
 
         # Строка 2: mu2
-        self.mu2_label = tk.Label(self.service_frame, text="mu2\n(min, max)", font=self.font, width=self.label_width, anchor='w', justify='left')
+        self.mu2_label_val = StringVar()
+        self.mu2_label_val.set("mu2\n(min, max)")
+        self.mu2_label = tk.Label(self.service_frame, textvariable=self.mu2_label_val, font=self.font, anchor='w', justify='left')
         self.mu2_label.grid(row=1, column=0, padx=5, pady=2, sticky="w")
         self.mu2_spinbox_min_val = tk.DoubleVar()
         self.mu2_spinbox_min_val.set(1.0)
-        self.mu2_spinbox_min = tk.Spinbox(self.service_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.mu2_spinbox_min_val)
+        self.mu2_spinbox_min = tk.Spinbox(self.service_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.mu2_spinbox_min_val)
         self.mu2_spinbox_min.grid(row=1, column=1, padx=5, pady=2, sticky="e")
         self.mu2_spinbox_max_val = tk.DoubleVar()
         self.mu2_spinbox_max_val.set(5.0)
-        self.mu2_spinbox_max = tk.Spinbox(self.service_frame, from_=0.1, to=1000, width=self.label_width, increment=0.1, font=self.font, textvariable=self.mu2_spinbox_max_val)
+        self.mu2_spinbox_max = tk.Spinbox(self.service_frame, from_=0.1, to=1000, increment=0.1, font=self.font, textvariable=self.mu2_spinbox_max_val)
         self.mu2_spinbox_max.grid(row=1, column=2, padx=5, pady=2, sticky="e")
 
         # Группа 4: Моделирование
@@ -110,11 +119,36 @@ class UI:
         self.requests_spinbox_val = tk.IntVar()
         self.requests_spinbox_val.set(300)
         self.requests_spinbox = tk.Spinbox(self.simulation_frame, from_=1, to=1000, increment=10, font=self.font, textvariable=self.requests_spinbox_val)
-        self.requests_spinbox.grid(row=0, column=1, sticky='e', padx=5, pady=5)
+        self.requests_spinbox.grid(row=0, column=1, columnspan=2, sticky='e', padx=5, pady=5)
 
         # Строка 2: Кнопка "Запуск"
         self.run_button = tk.Button(self.simulation_frame, text="Запуск", command=self.run_simulation, font=self.font)
-        self.run_button.grid(row=1, column=0, columnspan=2, sticky='ew', pady=5, padx=5)
+        self.run_button.grid(row=1, column=0, columnspan=3, sticky='ew', pady=5, padx=5)
+
+        self.result_frame = tk.LabelFrame(self.master, text="Результаты", font=self.font, padx=self.padding, pady=self.padding)
+        self.result_frame.grid(row=4, column=0, padx=10, pady=5, sticky="ew")
+        self.result_frame_label_val = StringVar()
+        self.result_frame_label_val.set("Тут будут результаты вычислений")
+        self.result_frame_label = tk.Label(self.result_frame, textvariable=self.result_frame_label_val, font=self.font, anchor='w', justify='left')
+        self.result_frame_label.grid(row=0, column=0, padx=5, pady=2, sticky="w")
+
+        # Radio buttons for experiment type
+        self.radio_frame = tk.Frame(self.master)
+        self.radio_frame.grid(row=5, column=0, pady=5)  # Place at the bottom
+
+        self.one_point_radio = tk.Radiobutton(self.radio_frame, text="Одна точка", font=self.font,
+                                              variable=self.experiment_type, value="one_point",
+                                              command=self.update_ui)
+        self.one_point_radio.grid(row=0, column=0, padx=10)
+
+        self.passive_radio = tk.Radiobutton(self.radio_frame, text="Пассивный эксперимент", font=self.font,
+                                            variable=self.experiment_type, value="passive",
+                                            command=self.update_ui)
+        self.passive_radio.grid(row=0, column=1, padx=10)
+
+        # Ensure 'Пассивный эксперимент' is selected by default
+        self.passive_radio.select()
+        self.update_ui()
 
         # Настройка весов столбцов и строк
         self.master.columnconfigure(0, weight=1)
@@ -122,10 +156,46 @@ class UI:
         self.generator2_frame.columnconfigure(1, weight=1)
         self.service_frame.columnconfigure(1, weight=1)
         self.simulation_frame.columnconfigure(1, weight=1)
+        self.generator1_frame.columnconfigure(2, weight=1)
+        self.generator2_frame.columnconfigure(2, weight=1)
+        self.service_frame.columnconfigure(2, weight=1)
+        self.simulation_frame.columnconfigure(2, weight=1)
 
-        for i in range(4):
+        for i in range(6):
             self.master.rowconfigure(i, weight=1)
 
+    def update_ui(self):
+        experiment_mode = self.experiment_type.get()
+
+        # Toggle visibility of min/max labels and spinboxes based on experiment type
+        lambda1_widgets = [self.lambda1_spinbox_max]
+        lambda2_widgets = [self.lambda2_spinbox_max]
+        mu1_widgets = [self.mu1_spinbox_max]
+        mu2_widgets = [self.mu2_spinbox_max]
+
+        all_widgets = lambda1_widgets + lambda2_widgets + mu1_widgets + mu2_widgets
+
+        if experiment_mode == "one_point":
+            for widget in all_widgets:
+                widget.grid_remove()
+                self.result_frame.grid()
+                self.lambda1_label_val.set("lambda1")
+                self.lambda2_label_val.set("lambda2")
+                self.mu1_label_val.set("mu1")
+                self.mu2_label_val.set("mu2")
+        else:  # passive
+            for widget in all_widgets:
+                self.result_frame.grid_remove()
+                self.lambda1_label_val.set("lambda1\n(min, max)")
+                self.lambda2_label_val.set("lambda2\n(min, max)")
+                self.mu1_label_val.set("mu1\n(min, max)")
+                self.mu2_label_val.set("mu2\n(min, max)")
+                widget.grid()
+
+        self.generator1_frame.columnconfigure(2, weight=1)
+        self.generator2_frame.columnconfigure(2, weight=1)
+        self.service_frame.columnconfigure(2, weight=1)
+        self.simulation_frame.columnconfigure(2, weight=1)
 
     def open_info_window(self):
         info_window = tk.Toplevel(self.master)
@@ -138,92 +208,96 @@ class UI:
 
 
     def run_simulation(self):
-        # Считывание значений из Spinbox
-        lambda1_min = self.lambda1_spinbox_min_val.get()
-        lambda1_max = self.lambda1_spinbox_max_val.get()
-        lambda2_min = self.lambda2_spinbox_min_val.get()
-        lambda2_max = self.lambda2_spinbox_max_val.get()
-        mu1_min = self.mu1_spinbox_min_val.get()
-        mu1_max = self.mu1_spinbox_max_val.get()
-        mu2_min = self.mu2_spinbox_min_val.get()
-        mu2_max = self.mu2_spinbox_max_val.get()
-        num_requests = self.requests_spinbox_val.get()
+        experiment_mode = self.experiment_type.get()
 
-        # Открытие нового окна с графиками
-        self.plot_window = tk.Toplevel(self.master)
-        self.plot_window.title("Результаты моделирования")
+        if experiment_mode == "one_point":
+            self.result_frame_label_val.set("one point")
+        else:
+            # Считывание значений из Spinbox
+            lambda1_min = self.lambda1_spinbox_min_val.get()
+            lambda1_max = self.lambda1_spinbox_max_val.get()
+            lambda2_min = self.lambda2_spinbox_min_val.get()
+            lambda2_max = self.lambda2_spinbox_max_val.get()
+            mu1_min = self.mu1_spinbox_min_val.get()
+            mu1_max = self.mu1_spinbox_max_val.get()
+            mu2_min = self.mu2_spinbox_min_val.get()
+            mu2_max = self.mu2_spinbox_max_val.get()
+            num_requests = self.requests_spinbox_val.get()
 
-        # Создание Canvas для графиков
-        self.plot_canvas = tk.Canvas(self.plot_window, width=480, height=500)
-        self.plot_canvas.grid(row=0, column=0, sticky="nsew")
+            # Открытие нового окна с графиками
+            self.plot_window = tk.Toplevel(self.master)
+            self.plot_window.title("Результаты моделирования")
 
-        # Добавление полосы прокрутки
-        self.scrollbar = ttk.Scrollbar(self.plot_window, orient=tk.VERTICAL, command=self.plot_canvas.yview)
-        self.scrollbar.grid(row=0, column=1, sticky="ns")
+            # Создание Canvas для графиков
+            self.plot_canvas = tk.Canvas(self.plot_window, width=480, height=500)
+            self.plot_canvas.grid(row=0, column=0, sticky="nsew")
 
-        self.plot_canvas.configure(yscrollcommand=self.scrollbar.set)
-        self.plot_canvas.bind('<Configure>', lambda e: self.plot_canvas.configure(scrollregion=self.plot_canvas.bbox("all")))
+            # Добавление полосы прокрутки
+            self.scrollbar = ttk.Scrollbar(self.plot_window, orient=tk.VERTICAL, command=self.plot_canvas.yview)
+            self.scrollbar.grid(row=0, column=1, sticky="ns")
 
-        # Создание фрейма для размещения графиков
-        self.plots_frame = tk.Frame(self.plot_canvas)
-        self.plot_canvas.create_window((0, 0), window=self.plots_frame, anchor="nw")
-        rc = {"xtick.direction": "inout", "ytick.direction": "inout",
-              "xtick.major.size": 5, "ytick.major.size": 5, }
-        with plt.rc_context(rc):
-        # Создание и добавление графиков
-            for i in range(5):
-                fig, ax = plt.subplots(figsize=(6, 4))  # Adjust figure size as needed
+            self.plot_canvas.configure(yscrollcommand=self.scrollbar.set)
+            self.plot_canvas.bind('<Configure>', lambda e: self.plot_canvas.configure(scrollregion=self.plot_canvas.bbox("all")))
 
-                # Prepare data for the line plot
-                y_values = [lambda1_min, lambda1_max, lambda2_min, lambda2_max, mu1_min, mu1_max, mu2_min, mu2_max, num_requests]
-                x_values = np.arange(len(y_values))  # X-coordinates for the values
+            # Создание фрейма для размещения графиков
+            self.plots_frame = tk.Frame(self.plot_canvas)
+            self.plot_canvas.create_window((0, 0), window=self.plots_frame, anchor="nw")
+            rc = {"xtick.direction": "inout", "ytick.direction": "inout",
+                "xtick.major.size": 5, "ytick.major.size": 5, }
+            with plt.rc_context(rc):
+            # Создание и добавление графиков
+                for i in range(5):
+                    fig, ax = plt.subplots(figsize=(6, 4))  # Adjust figure size as needed
 
-
-                ax.plot(x_values, y_values, marker='o') # Plot a line with circle markers
-
-                # Setting labels for each point on the line
-                for x, y in zip(x_values, y_values):
-                   ax.text(x, y, f"{y:.2f}", ha='center', va='bottom') # Label each point
+                    # Prepare data for the line plot
+                    y_values = [lambda1_min, lambda1_max, lambda2_min, lambda2_max, mu1_min, mu1_max, mu2_min, mu2_max, num_requests]
+                    x_values = np.arange(len(y_values))  # X-coordinates for the values
 
 
-                # Setting labels and title
-                ax.set_xlabel("Index")
-                ax.set_ylabel("Value")
-                ax.set_title(f"Line Plot of Variables {i + 1}")
+                    ax.plot(x_values, y_values, marker='o') # Plot a line with circle markers
+
+                    # Setting labels for each point on the line
+                    for x, y in zip(x_values, y_values):
+                       ax.text(x, y, f"{y:.2f}", ha='center', va='bottom') # Label each point
 
 
-                # Setting labels and title
-                ax.set_xlabel("Индекс")
-                ax.set_ylabel("Значение")
-                ax.set_title(f"Линейный график переменных {i + 1}")
+                    # Setting labels and title
+                    ax.set_xlabel("Index")
+                    ax.set_ylabel("Value")
+                    ax.set_title(f"Line Plot of Variables {i + 1}")
 
-                # Настройка стрелок на осях
-                ax.spines['left'].set_position('zero')
-                ax.spines['bottom'].set_position('zero')
-                ax.spines['right'].set_color('none')
-                ax.spines['top'].set_color('none')
-                ax.xaxis.set_ticks_position('bottom')
-                ax.yaxis.set_ticks_position('left')
 
-                # Adding grid
-                ax.grid(True)
+                    # Setting labels and title
+                    ax.set_xlabel("Индекс")
+                    ax.set_ylabel("Значение")
+                    ax.set_title(f"Линейный график переменных {i + 1}")
 
-                # Arrows
-                ax.plot((1), (0), ls="", marker=">", ms=10, color="k",
-                        transform=ax.get_yaxis_transform(), clip_on=False)
-                ax.plot((0), (1), ls="", marker="^", ms=10, color="k",
-                        transform=ax.get_xaxis_transform(), clip_on=False)
+                    # Настройка стрелок на осях
+                    ax.spines['left'].set_position('zero')
+                    ax.spines['bottom'].set_position('zero')
+                    ax.spines['right'].set_color('none')
+                    ax.spines['top'].set_color('none')
+                    ax.xaxis.set_ticks_position('bottom')
+                    ax.yaxis.set_ticks_position('left')
 
-                canvas = FigureCanvasTkAgg(fig, master=self.plots_frame)
-                canvas.draw()
-                canvas.get_tk_widget().grid(row=i, column=0, pady=20)  # Отступы между графиками
+                    # Adding grid
+                    ax.grid(True)
 
-        self.plots_frame.update_idletasks()
-        self.plot_canvas.config(scrollregion=self.plot_canvas.bbox("all"))
+                    # Arrows
+                    ax.plot((1), (0), ls="", marker=">", ms=10, color="k",
+                            transform=ax.get_yaxis_transform(), clip_on=False)
+                    ax.plot((0), (1), ls="", marker="^", ms=10, color="k",
+                            transform=ax.get_xaxis_transform(), clip_on=False)
 
-        self.plot_window.rowconfigure(0, weight=1)
-        self.plot_window.columnconfigure(0, weight=1)
+                    canvas = FigureCanvasTkAgg(fig, master=self.plots_frame)
+                    canvas.draw()
+                    canvas.get_tk_widget().grid(row=i, column=0, pady=20)  # Отступы между графиками
 
+            self.plots_frame.update_idletasks()
+            self.plot_canvas.config(scrollregion=self.plot_canvas.bbox("all"))
+
+            self.plot_window.rowconfigure(0, weight=1)
+            self.plot_window.columnconfigure(0, weight=1)
 
 def main():
     root = tk.Tk()
