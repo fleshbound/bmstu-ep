@@ -23,6 +23,8 @@ class Processor:
         self.max_reached_queue_size = 0
         self.is_aborting_to_tail = is_aborting_to_tail
         self.is_data_losing = is_data_losing
+        self.next = 0
+        self.processed = 0
 
     def last_equal_priority_queue_index(self, type: int):
         for i in range(self.queue.size() - 1, -1, -1):

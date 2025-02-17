@@ -28,3 +28,7 @@ class Request:
             self.remaining_time_interval = cur_abort_time - self.processing_time_interval
         else:
             self.remaining_time_interval -= cur_abort_time - self.last_abort_time
+
+
+REQUEST_TYPE_ONE = 1
+REQUEST_TYPE_TWO = 2

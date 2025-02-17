@@ -15,7 +15,7 @@ class Generator:
         self.distribution = d
         self.type = type
 
-    def next_time(self):
+    def next_time_interval(self):
         return self.distribution.generate()
 
     def generate(self, cur_sim_time: float):
