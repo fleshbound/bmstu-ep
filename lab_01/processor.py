@@ -39,7 +39,7 @@ class Processor:
         if self.is_busy() and r.type < self.current_request.type:  # 2 > 1 - less prior
             high_priority_index = self.first_high_priority_queue_index()
 
-            if high_priority_index > 0:
+            if high_priority_index >= 0:
                 self.queue.enqueue(r)
             else:
                 self.abort(r.create_time)
@@ -68,7 +68,7 @@ class Processor:
         return self.current_request is not None
 
     def next_time_interval(self, type: int) -> float:
-        return self.generators[type - 1].generate()
+        return self.generators[type].generate()
 
     def start_processing(self, cur_time: float) -> Optional[Request]:
         if self.queue.is_empty():
@@ -76,7 +76,7 @@ class Processor:
 
         high_priority_index = self.first_high_priority_queue_index()
 
-        if high_priority_index > 0:
+        if high_priority_index >= 0:
             request = self.queue.dequeue_emergency(high_priority_index)
         else:
             request = self.queue.dequeue()
