@@ -8,6 +8,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
 
+from lab_01.functions import SimulationResults, run_simulation_once, run_simulation_passive
+from lab_01.request import REQUEST_TYPE_ONE, REQUEST_TYPE_TWO
+
 
 class UI:
     def __init__(self, master):
@@ -147,7 +150,7 @@ class UI:
         self.passive_radio.grid(row=0, column=1, padx=10)
 
         # Ensure 'Пассивный эксперимент' is selected by default
-        self.passive_radio.select()
+        self.one_point_radio.select()
         self.update_ui()
 
         # Настройка весов столбцов и строк
@@ -211,7 +214,29 @@ class UI:
         experiment_mode = self.experiment_type.get()
 
         if experiment_mode == "one_point":
-            self.result_frame_label_val.set("one point")
+            requests_processed = self.requests_spinbox_val.get()
+            requests_per_generator = requests_processed * 2000
+            lambda1 = self.lambda1_spinbox_min_val.get()
+            lambda2 = self.lambda2_spinbox_min_val.get()
+            mu1 = self.mu1_spinbox_min_val.get()
+            mu2 = self.mu2_spinbox_min_val.get()
+            results: SimulationResults = run_simulation_once(
+                requests_per_generator,
+                requests_processed,
+                lambda1, lambda2, mu1, mu2
+            )
+
+            # result_load_ratio_1 = results.stats.proc_by_type[REQUEST_TYPE_ONE] / results.stats.avg_wait_times[REQUEST_TYPE_ONE]
+            # result_load_ratio_2 = ((results.stats.proc_by_type[REQUEST_TYPE_TWO] + results.stats.proc_by_type[REQUEST_TYPE_ONE])
+            #                        / (results.stats.avg_wait_times[REQUEST_TYPE_TWO] + results.stats.avg_wait_times[REQUEST_TYPE_ONE]))
+
+            result_load_ratio_1 = results.stats.exp_lambda_1 / results.stats.exp_mu_1
+            result_load_ratio_2 = result_load_ratio_1 + results.stats.exp_lambda_2 / results.stats.exp_mu_2
+
+            self.result_frame_label_val.set(f"Расчетная загрузка p1: {results.load_ratio_type_one}\n"
+                                            f"Расчетная загрузка p2: {results.load_ratio_type_two}\n"
+                                            f"Фактическая загрузка p1': {result_load_ratio_1}\n"
+                                            f"Фактическая загрузка p2': {result_load_ratio_2}")
         else:
             # Считывание значений из Spinbox
             lambda1_min = self.lambda1_spinbox_min_val.get()
@@ -227,6 +252,14 @@ class UI:
             # Открытие нового окна с графиками
             self.plot_window = tk.Toplevel(self.master)
             self.plot_window.title("Результаты моделирования")
+
+            res = run_simulation_passive(
+                num_requests,
+                {'min': lambda1_min, 'max': lambda1_max, 'step': (lambda1_max - lambda1_min) / 10},
+                {'min': lambda2_min, 'max': lambda2_max, 'step': (lambda2_max - lambda2_min) / 10},
+                {'min': mu1_min, 'max': mu1_max, 'step': (mu1_max - mu1_min) / 10},
+                {'min': mu2_min, 'max': mu2_max, 'step': (mu2_max - mu2_min) / 10}
+            )
 
             # Создание Canvas для графиков
             self.plot_canvas = tk.Canvas(self.plot_window, width=480, height=500)
@@ -245,7 +278,9 @@ class UI:
             rc = {"xtick.direction": "inout", "ytick.direction": "inout",
                 "xtick.major.size": 5, "ytick.major.size": 5, }
             with plt.rc_context(rc):
-            # Создание и добавление графиков
+                # Создание и добавление графиков
+                fig, ax = plt.subplots(figsize=(6, 4))
+                # y_values =
                 for i in range(5):
                     fig, ax = plt.subplots(figsize=(6, 4))  # Adjust figure size as needed
 

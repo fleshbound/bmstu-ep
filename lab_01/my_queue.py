@@ -42,6 +42,10 @@ class Queue:
         self.requests.insert(0, r)
         return True
 
+    def dequeue_emergency(self, index: int):
+        if not self.is_empty():
+            return self.requests.pop(index)
+
     def dequeue(self) -> Request:
         if not self.is_empty():
             return self.requests.pop(0)
