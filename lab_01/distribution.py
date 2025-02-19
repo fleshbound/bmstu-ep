@@ -42,4 +42,4 @@ class PoissonDistribution(Distribution):
         Returns:
             int: Случайное значение Пуассоновской случайной величины.
         """
-        return (- 1 / self.lambda_) * math.log2(1 - random())
+        return (- 1 / self.lambda_) * math.log(1 - random())
