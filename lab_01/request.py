@@ -9,6 +9,7 @@ class Request:
     remaining_time_interval: float  # remaining time interval after aborting
     processing_time_interval: float  # current task random processing time interval
     last_abort_time: float
+    last_queue_time: float
     was_aborted: bool
 
     def __init__(self, type: int, create_time: float):
@@ -19,10 +20,11 @@ class Request:
         self.remaining_time_interval = 0
         self.processing_time_interval = 0
         self.was_aborted = False
+        self.last_queue_time = create_time
         # print(f'{self.id}: создана ({self.type + 1})')
 
     def calc_waiting_time(self, cur_sim_time: float):
-        self.waiting_time_interval += cur_sim_time - self.create_time
+        self.waiting_time_interval += cur_sim_time - self.last_queue_time
 
     def set_processing_time_interval(self, processing_time_interval: float):
         self.processing_time_interval = processing_time_interval

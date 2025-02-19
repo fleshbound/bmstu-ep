@@ -61,6 +61,7 @@ class Processor:
                 self.queue.enqueue(self.current_request)
             else:
                 self.queue.enqueue_head(self.current_request)
+            self.current_request.last_queue_time = cur_sim_time
 
         self.current_request = None
 

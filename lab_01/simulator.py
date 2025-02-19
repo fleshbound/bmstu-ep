@@ -31,6 +31,10 @@ class Statistics:
         self.proc_by_type = [0, 0]
         self.crea_by_type = [0, 0]
         self.sim_time = 0
+        self.exp_lambda_1 = 0
+        self.exp_lambda_2 = 0
+        self.exp_mu_1 = 0
+        self.exp_mu_2 = 0
 
     def clear(self):
         self.refused = 0
@@ -42,12 +46,20 @@ class Statistics:
         self.proc_by_type = [0, 0]
         self.crea_by_type = [0, 0]
         self.sim_time = 0
+        self.exp_lambda_1 = 0
+        self.exp_lambda_2 = 0
+        self.exp_mu_1 = 0
+        self.exp_mu_2 = 0
 
     def calculate_avg_waiting_time(self, type: int):
         for t in self.waiting_times[type]:
             self.avg_wait_times[type] += t
 
-        self.avg_wait_times[type] /= len(self.waiting_times[type])
+        if len(self.waiting_times[type]) == 0:
+            # print(f'Не была обслужена ни одна заявка типа {type + 1}')
+            return
+        else:
+            self.avg_wait_times[type] /= len(self.waiting_times[type])
 
     def calculate_avg_waiting_times(self):
         self.calculate_avg_waiting_time(REQUEST_TYPE_ONE)
