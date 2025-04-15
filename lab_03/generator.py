@@ -12,18 +12,17 @@ class Generator:
     next: float
     machine_type: str = "generator"
 
-    def __init__(self, d: Distribution, type: int, num_requests: int):
+    def __init__(self, d: Distribution, type: int, num_requests: int = 3000):
         self.distribution = d
-        self.n_requests = num_requests
         self.type = type
 
     def next_time_interval(self):
         return self.distribution.generate()
 
     def generate(self, cur_sim_time: float):
-        if self.n_requests <= 0:
-            return None
-        self.n_requests -= 1
+        # if self.n_requests <= 0:
+        #     return None
+        # self.n_requests -= 1
 
         new_request = Request(self.type, cur_sim_time)
 

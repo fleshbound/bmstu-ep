@@ -1,9 +1,9 @@
 from typing import List, Optional
 
-from lab_01.distribution import Distribution
-from lab_01.request import REQUEST_TYPE_ONE
-from lab_01.my_queue import Queue
-from lab_01.request import Request
+from lab_03.distribution import Distribution
+from lab_03.request import REQUEST_TYPE_ONE
+from lab_03.my_queue import Queue
+from lab_03.request import Request
 
 
 class Processor:
